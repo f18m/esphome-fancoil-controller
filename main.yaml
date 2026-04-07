@@ -149,22 +149,22 @@ switch:
     name: ${relay4_name}
     pin: GPIO27
     restore_mode: RESTORE_DEFAULT_OFF
-  - platform: gpio
-    name: ${relay5_name}
-    pin: GPIO26
-    restore_mode: RESTORE_DEFAULT_OFF
-  - platform: gpio
-    name: ${relay6_name}
-    pin: GPIO25
-    restore_mode: RESTORE_DEFAULT_OFF
-  - platform: gpio
-    name: ${relay7_name}
-    pin: GPIO33
-    restore_mode: RESTORE_DEFAULT_OFF
-  - platform: gpio
-    name: ${relay8_name}
-    pin: GPIO32
-    restore_mode: RESTORE_DEFAULT_OFF
+  # - platform: gpio
+  #   name: ${relay5_name}
+  #   pin: GPIO26
+  #   restore_mode: RESTORE_DEFAULT_OFF
+  # - platform: gpio
+  #   name: ${relay6_name}
+  #   pin: GPIO25
+  #   restore_mode: RESTORE_DEFAULT_OFF
+  # - platform: gpio
+  #   name: ${relay7_name}
+  #   pin: GPIO33
+  #   restore_mode: RESTORE_DEFAULT_OFF
+  # - platform: gpio
+  #   name: ${relay8_name}
+  #   pin: GPIO32
+  #   restore_mode: RESTORE_DEFAULT_OFF
 
 time:
   # sync time with HomeAssistant, which in turn can be synced with an NTP server;
