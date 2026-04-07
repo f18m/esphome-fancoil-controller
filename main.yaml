@@ -1,0 +1,40 @@
+esphome:
+  name: aermec-split-p1-controller
+  friendly_name: Aermec_Split_P1_controller
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret encryption_key
+
+ota:
+  - platform: esphome
+    password: "a5223524e70340bc876e8f3dd5146f6e"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Aermec-Split-P1-Controller"
+    password: "Se6B8Iiep269"
+
+captive_portal:
+
+# Webserver is exposed under regular use
+web_server:
+  version: 3
+  port: 80
+  # Disable OTA updates for web_server only
+  # Captive portal will still have OTA access since it auto-loads the web server OTA platform
+  ota: false
+
