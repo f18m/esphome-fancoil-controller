@@ -8,9 +8,9 @@
 substitutions:
   # relay names -- these help you understand in HomeAssistant which relay is 
   # connected to which fan coil speed setting
-  relay1_name: "Low Speed"
-  relay2_name: "Medium Speed"
-  relay3_name: "High Speed"
+  relay1_name: "Speed Low"
+  relay2_name: "Speed Medium"
+  relay3_name: "Speed High"
   relay4_name: "Relay4"
   # secrets -- these allow the ESPHome device to "talk" to your Wifi and
   # your HomeAssistant instance
@@ -130,41 +130,24 @@ sensor:
 status_led:
   pin: GPIO23
 
-# Main relays controlling the floor heating zones
+# Main relays controlling the fan coil speeds
 switch:
-  # relays use GPIOS 12-14, 25-27, 32-33 (GPIO23 is used for status LED)
   - platform: gpio
     name: ${relay1_name}
-    pin: GPIO13
+    pin: GPIO26
     restore_mode: RESTORE_DEFAULT_OFF
   - platform: gpio
     name: ${relay2_name}
-    pin: GPIO12
+    pin: GPIO25
     restore_mode: RESTORE_DEFAULT_OFF
   - platform: gpio
     name: ${relay3_name}
-    pin: GPIO14
+    pin: GPIO33
     restore_mode: RESTORE_DEFAULT_OFF
   - platform: gpio
     name: ${relay4_name}
-    pin: GPIO27
+    pin: GPIO32
     restore_mode: RESTORE_DEFAULT_OFF
-  # - platform: gpio
-  #   name: ${relay5_name}
-  #   pin: GPIO26
-  #   restore_mode: RESTORE_DEFAULT_OFF
-  # - platform: gpio
-  #   name: ${relay6_name}
-  #   pin: GPIO25
-  #   restore_mode: RESTORE_DEFAULT_OFF
-  # - platform: gpio
-  #   name: ${relay7_name}
-  #   pin: GPIO33
-  #   restore_mode: RESTORE_DEFAULT_OFF
-  # - platform: gpio
-  #   name: ${relay8_name}
-  #   pin: GPIO32
-  #   restore_mode: RESTORE_DEFAULT_OFF
 
 time:
   # sync time with HomeAssistant, which in turn can be synced with an NTP server;
