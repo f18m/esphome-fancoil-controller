@@ -122,6 +122,11 @@ sensor:
                 (to_string(seconds) + "s")
               ).c_str();
 
+  # WiFi information sensors
+  - platform: wifi_signal
+    name: Signal Strength
+    update_interval: 60s
+
 # Status LED: indicates WiFi/API connection status
 # GPIO23 LED will be ON when connected, blinking when disconnected
 status_led:
