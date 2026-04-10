@@ -8,10 +8,7 @@
 substitutions:
   # relay names -- these help you understand in HomeAssistant which relay is 
   # connected to which fan coil speed setting
-  relay1_name: "Speed Low"
-  relay2_name: "Speed Medium"
-  relay3_name: "Speed High"
-  relay4_name: "Relay4"
+  relay4_name: "Relay4_Unused"
   # secrets -- these allow the ESPHome device to "talk" to your Wifi and
   # your HomeAssistant instance
   encryption_key: "your_encryption_key_here"
@@ -133,21 +130,65 @@ status_led:
 # Main relays controlling the fan coil speeds
 switch:
   - platform: gpio
-    name: ${relay1_name}
+    id: relay_speed_low
+    internal: true
     pin: GPIO26
     restore_mode: RESTORE_DEFAULT_OFF
   - platform: gpio
-    name: ${relay2_name}
+    id: relay_speed_medium
+    internal: true
     pin: GPIO25
     restore_mode: RESTORE_DEFAULT_OFF
   - platform: gpio
-    name: ${relay3_name}
+    id: relay_speed_high
+    internal: true
     pin: GPIO33
     restore_mode: RESTORE_DEFAULT_OFF
   - platform: gpio
     name: ${relay4_name}
     pin: GPIO32
     restore_mode: RESTORE_DEFAULT_OFF
+
+select:
+  - platform: template
+    name: "Fan Speed"
+    id: fan_speed
+    optimistic: true
+    options:
+      - "Off"
+      - "Speed Low"
+      - "Speed Medium"
+      - "Speed High"
+    initial_option: "Off"
+    set_action:
+      - if:
+          condition:
+            lambda: 'return x == "Off";'
+          then:
+            - switch.turn_off: relay_speed_low
+            - switch.turn_off: relay_speed_medium
+            - switch.turn_off: relay_speed_high
+      - if:
+          condition:
+            lambda: 'return x == "Speed Low";'
+          then:
+            - switch.turn_on: relay_speed_low
+            - switch.turn_off: relay_speed_medium
+            - switch.turn_off: relay_speed_high
+      - if:
+          condition:
+            lambda: 'return x == "Speed Medium";'
+          then:
+            - switch.turn_off: relay_speed_low
+            - switch.turn_on: relay_speed_medium
+            - switch.turn_off: relay_speed_high
+      - if:
+          condition:
+            lambda: 'return x == "Speed High";'
+          then:
+            - switch.turn_off: relay_speed_low
+            - switch.turn_off: relay_speed_medium
+            - switch.turn_on: relay_speed_high
 
 time:
   # sync time with HomeAssistant, which in turn can be synced with an NTP server;
