@@ -53,6 +53,19 @@ This project has been tested with the following fancoils:
 
 <img title="Wiring" alt="Wiring" src="images/connection-details.drawio.png">
 
+## Wiring Details
+
+These notes are specific to the fancoil model [Aermec FCX42P](./datasheets/Aermec_FCX_TECHNICAL_MANUAL_Eng.pdf).
+It exposes a connector with 4 wires:
+
+* Blue: earth wire
+* Black: should be connected to LIVE wire to enable MAX speed 
+* Brown: should be connected to LIVE wire to enable MEDIUM speed 
+* Red: should be connected to LIVE wire to enable MIN speed 
+
+<img title="Wiring" alt="Wiring" src="images/wiring.png">
+
+This makes it trivial connecting it to the relays as showsn in previous pictures above.
 
 ## Labelling of the board
 
@@ -64,15 +77,3 @@ A simple approach is to print a QR code pointing at this page.
 Here you can find a QR code I produced with the optimal [miniQR code generator](https://mini-qr-code-generator.vercel.app/):
 
 <img title="qrcode" alt="qrcode" src="images/qr-code.png">
-
-
-## Wiring Details
-
-The fancoil model [Aermec FCX42P](./datasheets/Aermec_FCX_TECHNICAL_MANUAL_Eng.pdf) exposes a connector with 4 wires:
-
-* Blue: earth wire
-* Black: should be connected to LIVE wire to enable MAX speed 
-* Brown: should be connected to LIVE wire to enable MEDIUM speed 
-* Red: should be connected to LIVE wire to enable MIN speed 
-
-<img title="Wiring" alt="Wiring" src="images/wiring.png">
