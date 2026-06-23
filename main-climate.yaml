@@ -192,6 +192,11 @@ climate:
       - switch.turn_off: relay_speed_medium
       - switch.turn_off: relay_speed_high
 
+    cool_action:
+      - logger.log: "cool_action (no-op)"
+    heat_action:
+      - logger.log: "heat_action (no-op)"
+
     min_fanning_off_time: 1s
     min_fanning_run_time: 1s
     min_fan_mode_switching_time: 1s
