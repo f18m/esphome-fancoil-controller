@@ -203,8 +203,8 @@ climate:
       - name: Normal
         mode: fan_only
         fan_mode: low
-        default_target:
-          fan_mode: low
+        default_target_temperature_low: 20
+        default_target_temperature_high: 24
     visual:
       min_temperature: 10
       max_temperature: 40
