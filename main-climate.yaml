@@ -200,9 +200,11 @@ climate:
     fan_only_cooling: false
     default_preset: "Normal"
     preset:
-      - name: "Normal"
-        mode: FAN_ONLY
-        fan_mode: LOW
+      - name: Normal
+        mode: fan_only
+        fan_mode: low
+        default_target:
+          fan_mode: low
     visual:
       min_temperature: 10
       max_temperature: 40
