@@ -162,32 +162,46 @@ climate:
 
     # Expose this as a climate entity focused on fan-only control.
     fan_only_action:
+      - logger.log:
+          format: "Turning off all relays"
       - switch.turn_off: relay_speed_low
       - switch.turn_off: relay_speed_medium
       - switch.turn_off: relay_speed_high
     idle_action:
+      - logger.log:
+          format: "Turning off all relays"
       - switch.turn_off: relay_speed_low
       - switch.turn_off: relay_speed_medium
       - switch.turn_off: relay_speed_high
 
     fan_mode_off_action:
+      - logger.log:
+          format: "Turning off all relays"
       - switch.turn_off: relay_speed_low
       - switch.turn_off: relay_speed_medium
       - switch.turn_off: relay_speed_high
     fan_mode_low_action:
+      - logger.log:
+          format: "Turning on LOW speed relay"
       - switch.turn_on: relay_speed_low
       - switch.turn_off: relay_speed_medium
       - switch.turn_off: relay_speed_high
     fan_mode_medium_action:
+      - logger.log:
+          format: "Turning on MEDIUM speed relay"
       - switch.turn_off: relay_speed_low
       - switch.turn_on: relay_speed_medium
       - switch.turn_off: relay_speed_high
     fan_mode_high_action:
+      - logger.log:
+          format: "Turning on HIGH speed relay"
       - switch.turn_off: relay_speed_low
       - switch.turn_off: relay_speed_medium
       - switch.turn_on: relay_speed_high
 
     off_mode:
+      - logger.log:
+          format: "Turning off all relays"
       - switch.turn_off: relay_speed_low
       - switch.turn_off: relay_speed_medium
       - switch.turn_off: relay_speed_high
