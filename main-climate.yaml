@@ -1,0 +1,218 @@
+#
+# Fan Coil Controller
+# ESPHome PACKAGE configuration file
+# See https://esphome.io/components/packages/
+#
+
+# Package available substitutions
+substitutions:
+  # relay names -- these help you understand in HomeAssistant which relay is 
+  # connected to which fan coil speed setting
+  relay4_name: "Relay4_Unused"
+  # secrets -- these allow the ESPHome device to "talk" to your Wifi and
+  # your HomeAssistant instance
+  encryption_key: "your_encryption_key_here"
+  ota_password: "your_ota_password_here"
+  wifi_ssid: "your_wifi_ssid_here"
+  wifi_password: "your_wifi_password_here"
+  wifi_ap_password: "your_wifi_ap_password_here"
+  # logging -- for extra debugging
+  #syslog_server: "your_syslog_server_ip_here"
+  #syslog_port: "514"  # default syslog port is 514, but you can change it if your server uses a different port
+
+# You might want to override this:
+esphome:
+  name: fancoilcontroller
+  friendly_name: FanCoilController
+  comment: "Relay board controlling fan coil speeds"
+
+# Board
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: ${encryption_key}
+
+# Wireless Connectivity:
+ota:
+  - platform: esphome
+    password: ${ota_password}
+wifi:
+  ssid: ${wifi_ssid}
+  password: ${wifi_password}
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "FanCoilController Fallback"
+    password: ${wifi_ap_password}
+
+# Extra sensors:
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP
+      icon: mdi:ip-network-outline
+    mac_address:
+      name: MAC
+      icon: mdi:network-outline
+  - platform: version
+    name: "ESPHome Version"
+  # Expose Uptime
+  - platform: template
+    name: "Uptime Human Readable"
+    id: uptime_human
+    icon: mdi:clock-start
+
+# Captive Portal is the portal created by this node when Wifi connection fails
+captive_portal:
+    
+# Webserver is exposed under regular use
+web_server:
+  port: 80
+  # Disable OTA updates for web_server only
+  # Captive portal will still have OTA access since it auto-loads the web server OTA platform
+  ota: false
+
+# SPI bus configuration
+# MOSI is not required because the slave device does not accept any input
+#  SPI	MOSI    MISO    SCLK    CS
+# VSPI	GPIO23	GPIO19	GPIO18	GPIO5
+# HSPI	GPIO13	GPIO12	GPIO14	GPIO15
+spi:
+  miso_pin: GPIO16
+  clk_pin: GPIO17
+
+# Temperature sensors
+sensor:
+  # Temperature sensor on SPI, see https://esphome.io/components/sensor/max6675/
+  - platform: max6675
+    id: heating_pipe_sensor
+    name: "Cool pipe Temperature"
+    cs_pin: GPIO15
+    update_interval: 60s
+
+  # Uptime Sensor
+  - platform: uptime
+    name: "Uptime"
+    id: uptime_sensor
+    update_interval: 360s
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(uptime_sensor).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "") +
+                (to_string(seconds) + "s")
+              ).c_str();
+
+  # WiFi information sensors
+  - platform: wifi_signal
+    name: Signal Strength
+    update_interval: 60s
+
+# Status LED: indicates WiFi/API connection status
+# GPIO23 LED will be ON when connected, blinking when disconnected
+status_led:
+  pin: GPIO23
+
+# Main relays controlling the fan coil speeds
+switch:
+  - platform: gpio
+    id: relay_speed_low
+    internal: true
+    pin: GPIO26
+    restore_mode: RESTORE_DEFAULT_OFF
+  - platform: gpio
+    id: relay_speed_medium
+    internal: true
+    pin: GPIO25
+    restore_mode: RESTORE_DEFAULT_OFF
+  - platform: gpio
+    id: relay_speed_high
+    internal: true
+    pin: GPIO33
+    restore_mode: RESTORE_DEFAULT_OFF
+  - platform: gpio
+    name: ${relay4_name}
+    pin: GPIO32
+    restore_mode: RESTORE_DEFAULT_OFF
+
+climate:
+  - platform: thermostat
+    name: "Fan Coil"
+    id: fancoil_climate
+    sensor: heating_pipe_sensor
+
+    # Expose this as a climate entity focused on fan-only control.
+    fan_only_action:
+      - switch.turn_off: relay_speed_low
+      - switch.turn_off: relay_speed_medium
+      - switch.turn_off: relay_speed_high
+    idle_action:
+      - switch.turn_off: relay_speed_low
+      - switch.turn_off: relay_speed_medium
+      - switch.turn_off: relay_speed_high
+
+    fan_mode_off_action:
+      - switch.turn_off: relay_speed_low
+      - switch.turn_off: relay_speed_medium
+      - switch.turn_off: relay_speed_high
+    fan_mode_low_action:
+      - switch.turn_on: relay_speed_low
+      - switch.turn_off: relay_speed_medium
+      - switch.turn_off: relay_speed_high
+    fan_mode_medium_action:
+      - switch.turn_off: relay_speed_low
+      - switch.turn_on: relay_speed_medium
+      - switch.turn_off: relay_speed_high
+    fan_mode_high_action:
+      - switch.turn_off: relay_speed_low
+      - switch.turn_off: relay_speed_medium
+      - switch.turn_on: relay_speed_high
+
+    off_mode:
+      - switch.turn_off: relay_speed_low
+      - switch.turn_off: relay_speed_medium
+      - switch.turn_off: relay_speed_high
+
+    min_fanning_off_time: 1s
+    min_fanning_run_time: 1s
+    min_fan_mode_switching_time: 1s
+    min_idle_time: 1s
+
+    fan_only_cooling: false
+    default_preset: "Normal"
+    preset:
+      - name: "Normal"
+        mode: FAN_ONLY
+        fan_mode: LOW
+    visual:
+      min_temperature: 10
+      max_temperature: 40
+      temperature_step:
+        target_temperature: 0.5
+        current_temperature: 0.1
+
+time:
+  # sync time with HomeAssistant, which in turn can be synced with an NTP server;
+  # a good time sync is not critical for this project but it can be useful for debugging
+  # when reading the logs
+  - platform: homeassistant
+    id: homeassistant_time
