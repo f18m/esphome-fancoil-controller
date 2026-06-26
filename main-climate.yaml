@@ -211,8 +211,8 @@ climate:
 
     min_cooling_off_time: 1s
     min_cooling_run_time: 1s
-    min_heating_off_time: 1s
-    min_heating_run_time: 1s
+    #min_heating_off_time: 1s
+    #min_heating_run_time: 1s
 
     min_fanning_off_time: 1s
     min_fanning_run_time: 1s
