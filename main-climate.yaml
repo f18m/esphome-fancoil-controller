@@ -208,8 +208,6 @@ climate:
 
     cool_action:
       - logger.log: "cool_action (no-op)"
-    heat_action:
-      - logger.log: "heat_action (no-op)"
 
     min_cooling_off_time: 1s
     min_cooling_run_time: 1s
