@@ -221,14 +221,15 @@ climate:
     min_fan_mode_switching_time: 1s
     min_idle_time: 1s
 
+    supports_two_target_temperatures: false
+
     fan_only_cooling: false
     default_preset: "Normal"
     preset:
       - name: Normal
         mode: fan_only
         fan_mode: low
-        default_target_temperature_low: 20
-        default_target_temperature_high: 24
+        default_target_temperature: 24   # ← single setpoint instead of low/high
     visual:
       min_temperature: 10
       max_temperature: 40

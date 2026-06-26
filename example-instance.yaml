@@ -2,7 +2,7 @@ packages:
   remote_package_files:
     url: https://github.com/f18m/esphome-fancoil-controller/
     files: 
-      - path: main.yaml
+      - path: main-climate.yaml
         vars:
           encryption_key: "MqLWuv12+mOVDxRI7E0dK8Vx0+xy1gnRHEkzhXMBCac="
           wifi_ssid: "Some-SSID"
