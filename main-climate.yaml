@@ -91,8 +91,8 @@ spi:
 
 # Temperature sensors
 sensor:
-  # Temperature sensor on SPI, see https://esphome.io/components/sensor/max6675/
-  - platform: max6675
+  # Temperature sensor on SPI, see https://esphome.io/components/sensor/max31855/
+  - platform: max31855
     id: heating_pipe_sensor
     name: "Cool pipe Temperature"
     cs_pin: GPIO15
